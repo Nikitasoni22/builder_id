@@ -7,7 +7,7 @@ function generateTitle(){return `${randOf(PREFIX)} ${randOf(NOUN)} ${randOf(SUFF
 
 /* ================= state ================= */
 const state={
-  img:null, zoom:1, offX:0, offY:0,
+  img:null, zoom:1, offX:0, offY:0, rotation:0,
   dragging:false, lastX:0, lastY:0,
   title: generateTitle(),
   passportNo: 'HHG26-'+Math.floor(100000+Math.random()*899999)
@@ -170,11 +170,22 @@ function draw(){
   ctx.clip();
   if(state.img){
     const iw=state.img.width, ih=state.img.height;
-    const base=fitCover(iw,ih,PB.w,PB.h)*state.zoom;
+    const rot=(state.rotation||0)%360;
+    const is90or270=(rot===90||rot===270);
+    const effW=is90or270?ih:iw;
+    const effH=is90or270?iw:ih;
+
+    const base=fitCover(effW,effH,PB.w,PB.h)*state.zoom;
     const dw=iw*base, dh=ih*base;
     const cx=PB.x+PB.w/2+state.offX;
     const cy=PB.y+PB.h/2+state.offY;
-    ctx.drawImage(state.img, cx-dw/2, cy-dh/2, dw, dh);
+
+    ctx.save();
+    ctx.translate(cx,cy);
+    ctx.rotate((rot*Math.PI)/180);
+    ctx.drawImage(state.img, -dw/2, -dh/2, dw, dh);
+    ctx.restore();
+
     ctx.fillStyle='rgba(10,74,44,.06)'; ctx.fillRect(PB.x,PB.y,PB.w,PB.h);
   }else{
     ctx.fillStyle='#dcd2ac'; ctx.fillRect(PB.x,PB.y,PB.w,PB.h);
@@ -314,24 +325,181 @@ dropzone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')fileInpu
 dropzone.addEventListener('drop',e=>{ const f=e.dataTransfer.files[0]; if(f) handleFile(f); });
 fileInput.addEventListener('change',e=>{ const f=e.target.files[0]; if(f) handleFile(f); });
 
+function setImageSource(img, previewUrl){
+  state.img=img; state.zoom=1; state.offX=0; state.offY=0; state.rotation=0;
+  zoomSlider.value=100;
+  zoomRow.style.display='flex';
+  dzText.textContent='Tap to change photo';
+  if(previewUrl){
+    thumb.src=previewUrl; thumb.hidden=false;
+  }
+  readyBadge.style.display='inline-block';
+  draw();
+  statusEl.textContent='Looking sharp. Fill in your details →';
+}
+
 async function handleFile(file){
   statusEl.textContent='Reading photo…';
   try{
     const img=await loadImageFile(file);
-    state.img=img; state.zoom=1; state.offX=0; state.offY=0;
-    zoomSlider.value=100;
-    zoomRow.style.display='flex';
-    dzText.textContent='Tap to change photo';
-    thumb.src=URL.createObjectURL(file); thumb.hidden=false;
-    readyBadge.style.display='inline-block';
-    draw();
-    statusEl.textContent='Looking sharp. Fill in your details →';
+    const url=URL.createObjectURL(file);
+    setImageSource(img, url);
   }catch(err){
     statusEl.textContent='Could not read that file — try a JPG or PNG.';
   }
 }
 
+/* ================= webcam capture ================= */
+const webcamBtn=document.getElementById('webcamBtn');
+const webcamModal=document.getElementById('webcamModal');
+const closeWebcamBtn=document.getElementById('closeWebcamBtn');
+const cancelWebcamBtn=document.getElementById('cancelWebcamBtn');
+const snapPhotoBtn=document.getElementById('snapPhotoBtn');
+const flipCameraBtn=document.getElementById('flipCameraBtn');
+const webcamVideo=document.getElementById('webcamVideo');
+const webcamError=document.getElementById('webcamError');
+const shutterFlash=document.getElementById('shutterFlash');
+
+let webcamStream=null;
+let currentFacingMode='user';
+
+async function checkMultipleCameras(){
+  if(!navigator.mediaDevices||!navigator.mediaDevices.enumerateDevices) return;
+  try{
+    const devices=await navigator.mediaDevices.enumerateDevices();
+    const videoDevices=devices.filter(d=>d.kind==='videoinput');
+    if(videoDevices.length>1){
+      flipCameraBtn.style.display='inline-flex';
+    }
+  }catch(e){}
+}
+
+async function startWebcam(){
+  stopWebcam();
+  webcamError.hidden=true;
+  webcamError.textContent='';
+  
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    showWebcamError('Webcam access is not supported by your browser or connection.');
+    return;
+  }
+
+  try{
+    const constraints={
+      video:{
+        facingMode:currentFacingMode,
+        width:{ideal:1280},
+        height:{ideal:1280}
+      },
+      audio:false
+    };
+    webcamStream=await navigator.mediaDevices.getUserMedia(constraints);
+    webcamVideo.srcObject=webcamStream;
+    
+    if(currentFacingMode==='environment'){
+      webcamVideo.classList.add('no-mirror');
+    }else{
+      webcamVideo.classList.remove('no-mirror');
+    }
+    
+    await webcamVideo.play();
+    checkMultipleCameras();
+  }catch(err){
+    let msg='Could not access webcam.';
+    if(err.name==='NotAllowedError'||err.name==='PermissionDeniedError'){
+      msg='Camera permission was denied. Please allow camera access in browser settings.';
+    }else if(err.name==='NotFoundError'||err.name==='DevicesNotFoundError'){
+      msg='No camera device found on your system.';
+    }else if(err.name==='NotReadableError'||err.name==='TrackStartError'){
+      msg='Camera is currently in use by another application.';
+    }
+    showWebcamError(msg);
+  }
+}
+
+function showWebcamError(msg){
+  webcamError.textContent=msg;
+  webcamError.hidden=false;
+}
+
+function stopWebcam(){
+  if(webcamStream){
+    webcamStream.getTracks().forEach(track=>track.stop());
+    webcamStream=null;
+  }
+  if(webcamVideo){
+    webcamVideo.srcObject=null;
+  }
+}
+
+function openWebcamModal(){
+  webcamModal.hidden=false;
+  document.body.style.overflow='hidden';
+  startWebcam();
+}
+
+function closeWebcamModal(){
+  stopWebcam();
+  webcamModal.hidden=true;
+  document.body.style.overflow='';
+}
+
+function snapPhoto(){
+  if(!webcamVideo||webcamVideo.readyState<2){
+    showWebcamError('Camera is not ready yet. Please wait a moment.');
+    return;
+  }
+  
+  shutterFlash.classList.add('flash');
+  setTimeout(()=>shutterFlash.classList.remove('flash'),200);
+
+  const vw=webcamVideo.videoWidth||640;
+  const vh=webcamVideo.videoHeight||480;
+  
+  const offCanvas=document.createElement('canvas');
+  offCanvas.width=vw;
+  offCanvas.height=vh;
+  const octx=offCanvas.getContext('2d');
+  
+  if(currentFacingMode==='user'){
+    octx.translate(vw,0);
+    octx.scale(-1,1);
+  }
+  
+  octx.drawImage(webcamVideo,0,0,vw,vh);
+  
+  const dataUrl=offCanvas.toDataURL('image/png');
+  const img=new Image();
+  img.onload=()=>{
+    setImageSource(img,dataUrl);
+    closeWebcamModal();
+  };
+  img.src=dataUrl;
+}
+
+webcamBtn.addEventListener('click',openWebcamModal);
+closeWebcamBtn.addEventListener('click',closeWebcamModal);
+cancelWebcamBtn.addEventListener('click',closeWebcamModal);
+snapPhotoBtn.addEventListener('click',snapPhoto);
+
+flipCameraBtn.addEventListener('click',()=>{
+  currentFacingMode=currentFacingMode==='user'?'environment':'user';
+  startWebcam();
+});
+
+webcamModal.addEventListener('click',e=>{
+  if(e.target===webcamModal) closeWebcamModal();
+});
+
 zoomSlider.addEventListener('input',()=>{ state.zoom=zoomSlider.value/100; draw(); });
+
+const rotateBtn=document.getElementById('rotateBtn');
+if(rotateBtn){
+  rotateBtn.addEventListener('click',()=>{
+    state.rotation=((state.rotation||0)+90)%360;
+    draw();
+  });
+}
 
 function canvasPoint(evt){
   const rect=canvas.getBoundingClientRect();

@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Builder ID — HH GOA 2026</title>
 <meta name="description" content="Upload a photo, get your Hacker House Goa 2026 Builder ID passport in seconds. Download & share on X with #FrameInGoa.">
+<!-- Open Graph / X Twitter Card metadata -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="HH Goa 2026 Builder ID Generator">
+<meta property="og:description" content="Create your official passport-style HH Goa 2026 Builder ID card. Share on X with #FrameInGoa.">
+<meta property="og:image" content="https://raw.githubusercontent.com/Nikitasoni22/goa_HH2026_task1/main/preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HH Goa 2026 Builder ID Generator">
+<meta name="twitter:description" content="Create your official passport-style HH Goa 2026 Builder ID card. Share on X with #FrameInGoa.">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Nikitasoni22/goa_HH2026_task1/main/preview.png">
+<meta name="twitter:site" content="@247pmstudio">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,700;0,6..96,900;1,6..96,600&family=Space+Mono:wght@400;700&family=Poppins:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@600;700&display=swap" rel="stylesheet">
@@ -24,13 +34,13 @@
 </nav>
 
 <section class="hero">
-  <span class="eyebrow">TASK #1 · BUILD THIS</span>
+  <span class="eyebrow">HH GOA 2026 · 28–31 OCT · GOA, INDIA</span>
   <div class="wordmark">
-    <h1 class="title">BUILDER ID</h1>
-    <div class="goa-sticker">गोवा</div>
+    <h1 class="title">HACKER HOUSE</h1>
+    <div class="goa-sticker animated-sticker">गोवा</div>
   </div>
-  <div class="subtitle">HH GOA 2026 · PASSPORT‑STYLE ID GENERATOR</div>
-  <p class="hero-desc">Upload a photo, add your name & stack, and get a Hacker House Goa 2026 Builder ID — passport style. Download it, post it, tag #FrameInGoa.</p>
+  <div class="subtitle">BUILDER ID & PASSPORT GENERATOR · #FrameInGoa</div>
+  <p class="hero-desc">Upload a photo or snap with webcam, add your stack, and generate your official Hacker House Goa 2026 Builder ID passport. Download & post on X with <strong>#FrameInGoa</strong>.</p>
 </section>
 
 <section class="scene" aria-hidden="true">
@@ -135,17 +145,29 @@
       </ul>
       <hr class="divider">
 
-      <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload your photo">
-        <img class="thumb" id="thumb" alt="" hidden>
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 16V4M12 4l-4 4M12 4l4 4" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <strong id="dzText">Tap or drop your photo</strong>
-        <span>JPG · PNG · HEIC · any crop</span>
+      <div class="photo-input-options">
+        <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload your photo">
+          <img class="thumb" id="thumb" alt="" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 16V4M12 4l-4 4M12 4l4 4" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <strong id="dzText">Tap or drop your photo</strong>
+          <span>JPG · PNG · HEIC · any crop</span>
+        </div>
+        <button type="button" class="btn btn-webcam" id="webcamBtn" title="Take photo using webcam">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          Take Photo with Webcam
+        </button>
       </div>
       <input type="file" id="fileInput" accept="image/*,.heic,.heif">
 
-      <div class="zoomrow" id="zoomRow" style="display:none">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3" stroke-linecap="round"/></svg>
-        <input type="range" id="zoom" min="100" max="260" value="100">
+      <div class="photo-controls-row" id="zoomRow" style="display:none">
+        <div class="zoom-control">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3" stroke-linecap="round"/></svg>
+          <input type="range" id="zoom" min="100" max="260" value="100" title="Zoom photo">
+        </div>
+        <button type="button" class="btn-rotate" id="rotateBtn" title="Rotate photo 90°" aria-label="Rotate photo 90 degrees">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Rotate 90°</span>
+        </button>
       </div>
 
       <div class="field">
@@ -198,6 +220,42 @@
   <p>GOA, INDIA · 28–31 OCT 2026 · #FrameInGoa</p>
   <p class="credit">Fan‑made builder tool · visual identity inspired by 2:47 PM Studio's HH Goa 2026 brand</p>
 </footer>
+
+<!-- WEBCAM MODAL -->
+<div class="modal-overlay" id="webcamModal" hidden>
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <span>CAMERA SNAPSHOT</span>
+      </div>
+      <button class="modal-close" id="closeWebcamBtn" aria-label="Close camera">&times;</button>
+    </div>
+    
+    <div class="webcam-viewport">
+      <video id="webcamVideo" autoplay playsinline muted></video>
+      <div class="webcam-guide-overlay">
+        <div class="guide-frame"></div>
+        <span>Align face inside passport frame</span>
+      </div>
+      <div class="shutter-flash" id="shutterFlash"></div>
+    </div>
+
+    <div class="webcam-error" id="webcamError" hidden></div>
+
+    <div class="webcam-controls">
+      <button class="btn btn-primary" id="snapPhotoBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+        Snap Photo
+      </button>
+      <button class="btn btn-ghost" id="flipCameraBtn" title="Switch camera" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0-4.4-3.6-8-8-8s-8 3.6-8 8h-3l4 5 4-5h-3c0-3.3 2.7-6 6-6s6 2.7 6 6h-2l4 5 4-5h-2zM4 14c0 4.4 3.6 8 8 8s8-3.6 8-8h3l-4-5-4 5h3c0 3.3-2.7 6-6 6s-6-2.7-6-6h2l-4-5-4 5h2z"/></svg>
+        Flip Camera
+      </button>
+      <button class="btn btn-ghost" id="cancelWebcamBtn">Cancel</button>
+    </div>
+  </div>
+</div>
 
 <script src="script.js" defer></script>
 </body>
