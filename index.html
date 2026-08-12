@@ -17,120 +17,244 @@
 <meta name="twitter:site" content="@247pmstudio">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,700;0,6..96,900;1,6..96,600&family=Space+Mono:wght@400;700&family=Poppins:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Imbue:opsz,wght@10..100,400;500;600;700;800;900&family=Victor+Mono:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div class="grain"></div>
 
-<div class="ticker"><div>HH GOA 2026 &nbsp;·&nbsp; 28–31 OCT &nbsp;·&nbsp; #FrameInGoa &nbsp;·&nbsp; 2:47 PM STUDIO &nbsp;·&nbsp; BUILDER ID GENERATOR &nbsp;·&nbsp; HH GOA 2026 &nbsp;·&nbsp; 28–31 OCT &nbsp;·&nbsp; #FrameInGoa &nbsp;·&nbsp; 2:47 PM STUDIO &nbsp;·&nbsp; BUILDER ID GENERATOR &nbsp;·&nbsp;</div></div>
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>HH GOA 2026 &nbsp;·&nbsp; 28–31 OCT &nbsp;·&nbsp; #FrameInGoa &nbsp;·&nbsp; 2:47 PM STUDIO &nbsp;·&nbsp; BUILDER ID GENERATOR &nbsp;·&nbsp;</span>
+    <span>HH GOA 2026 &nbsp;·&nbsp; 28–31 OCT &nbsp;·&nbsp; #FrameInGoa &nbsp;·&nbsp; 2:47 PM STUDIO &nbsp;·&nbsp; BUILDER ID GENERATOR &nbsp;·&nbsp;</span>
+  </div>
+</div>
+
+<div class="front-page">
+  <div class="goa-bg" aria-hidden="true">
+    <svg class="goa-scene" viewBox="0 0 1440 820" preserveAspectRatio="xMidYMax slice">
+      <defs>
+        <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#064a28"/>
+          <stop offset="55%" stop-color="#0b6839"/>
+          <stop offset="100%" stop-color="#0b6839"/>
+        </linearGradient>
+      </defs>
+
+      <!-- sky -->
+      <rect width="1440" height="820" fill="url(#skyGrad)"/>
+
+      <!-- sun rays -->
+      <g class="sun-rays" stroke="#fee101" stroke-width="3" stroke-linecap="round" opacity="0.85">
+        <line x1="300" y1="250" x2="300" y2="80"/>
+        <line x1="300" y1="250" x2="440" y2="95"/>
+        <line x1="300" y1="250" x2="160" y2="95"/>
+        <line x1="300" y1="250" x2="560" y2="140"/>
+        <line x1="300" y1="250" x2="60" y2="140"/>
+        <line x1="300" y1="250" x2="660" y2="210"/>
+        <line x1="300" y1="250" x2="80" y2="210"/>
+        <line x1="300" y1="250" x2="720" y2="280"/>
+        <line x1="300" y1="250" x2="120" y2="280"/>
+      </g>
+
+      <!-- sun -->
+      <g class="sun-glow">
+        <circle cx="300" cy="250" r="88" fill="#fee101" stroke="#0a2e1c" stroke-width="3"/>
+      </g>
+
+      <!-- ocean -->
+      <rect x="0" y="250" width="1440" height="200" fill="#0b6839"/>
+      <g class="sun-reflect" stroke="#fee101" stroke-width="4" stroke-linecap="round" opacity="0.75">
+        <line x1="240" y1="290" x2="360" y2="290"/>
+        <line x1="210" y1="310" x2="390" y2="310"/>
+        <line x1="180" y1="330" x2="420" y2="330"/>
+        <line x1="150" y1="350" x2="450" y2="350"/>
+        <line x1="120" y1="370" x2="480" y2="370"/>
+        <line x1="90" y1="390" x2="510" y2="390"/>
+      </g>
+
+      <!-- horizon boat -->
+      <g transform="translate(340,238)">
+        <g class="boat-bob">
+          <path d="M-18 0 L18 0 L10 8 L-10 8 Z" fill="#fffbe8" stroke="#0a2e1c" stroke-width="2"/>
+          <line x1="0" y1="0" x2="0" y2="-14" stroke="#fffbe8" stroke-width="2"/>
+          <path d="M0 -14 L10 -4 L0 -4 Z" fill="#fffbe8" stroke="#0a2e1c" stroke-width="1.5"/>
+        </g>
+      </g>
+
+      <!-- distant hills -->
+      <path d="M0 250 Q200 220 400 245 T800 235 T1200 248 T1440 240 V320 H0Z" fill="#0d7540" opacity="0.5"/>
+
+      <!-- sand beach -->
+      <path d="M0 430 Q180 400 360 418 T720 408 T1080 420 T1440 410 V820 H0Z" fill="#fffbe8" stroke="#0a2e1c" stroke-width="2"/>
+
+      <!-- shore waves -->
+      <g class="wave-line" fill="none" stroke="#fff" stroke-width="2.5" opacity="0.7">
+        <path d="M0 430 Q60 420 120 430 T240 430 T360 430 T480 430 T600 430 T720 430 T840 430 T960 430 T1080 430 T1200 430 T1320 430 T1440 430"/>
+        <path d="M0 448 Q80 438 160 448 T320 448 T480 448 T640 448 T800 448 T960 448 T1120 448 T1280 448 T1440 448"/>
+      </g>
+
+      <!-- left framing palm -->
+      <g transform="translate(60,820)">
+        <g class="palm p1">
+          <rect x="-10" y="-320" width="20" height="320" fill="#fffbe8" stroke="#0a2e1c" stroke-width="2.5" rx="2"/>
+          <g fill="#159652" stroke="#0a2e1c" stroke-width="2">
+            <path d="M0 -316 C-90 -360,-150 -320,-120 -250 C-70 -290,-30 -308,0 -316 Z"/>
+            <path d="M0 -316 C90 -360,150 -320,120 -250 C70 -290,30 -308,0 -316 Z"/>
+            <path d="M0 -316 C-55 -390,-85 -440,-40 -470 C-15 -420,-5 -370,0 -316 Z"/>
+            <path d="M0 -316 C55 -390,85 -440,40 -470 C15 -420,5 -370,0 -316 Z"/>
+            <path d="M0 -316 C-12 -400,-5 -450,0 -480 C8 -450,12 -400,0 -316 Z"/>
+          </g>
+        </g>
+      </g>
+
+      <!-- right framing palm -->
+      <g transform="translate(1380,820) scale(-1,1)">
+        <g class="palm p2">
+          <rect x="-10" y="-360" width="20" height="360" fill="#fffbe8" stroke="#0a2e1c" stroke-width="2.5" rx="2"/>
+          <g fill="#0f8450" stroke="#0a2e1c" stroke-width="2">
+            <path d="M0 -356 C-90 -400,-150 -360,-120 -290 C-70 -330,-30 -348,0 -356 Z"/>
+            <path d="M0 -356 C90 -400,150 -360,120 -290 C70 -330,30 -348,0 -356 Z"/>
+            <path d="M0 -356 C-55 -430,-85 -480,-40 -510 C-15 -460,-5 -410,0 -356 Z"/>
+            <path d="M0 -356 C55 -430,85 -480,40 -510 C15 -460,5 -410,0 -356 Z"/>
+            <path d="M0 -356 C-12 -440,-5 -490,0 -520 C8 -490,12 -440,0 -356 Z"/>
+          </g>
+        </g>
+      </g>
+
+      <!-- beach umbrella left -->
+      <g transform="translate(220,470)">
+        <line x1="0" y1="0" x2="0" y2="55" stroke="#0a2e1c" stroke-width="3"/>
+        <path d="M-52 0 Q0 -28 52 0 Z" fill="#fee101" stroke="#0a2e1c" stroke-width="2"/>
+        <path d="M-52 0 Q0 -28 52 0" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="8 8"/>
+        <rect x="-28" y="52" width="56" height="8" rx="2" fill="#159652" stroke="#0a2e1c" stroke-width="2"/>
+        <rect x="-22" y="60" width="44" height="6" rx="2" fill="#0d7540" stroke="#0a2e1c" stroke-width="1.5"/>
+      </g>
+
+      <!-- beach umbrella right -->
+      <g transform="translate(1050,478)">
+        <line x1="0" y1="0" x2="0" y2="50" stroke="#0a2e1c" stroke-width="3"/>
+        <path d="M-48 0 Q0 -26 48 0 Z" fill="#fee101" stroke="#0a2e1c" stroke-width="2"/>
+        <path d="M-48 0 Q0 -26 48 0" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="8 8"/>
+        <rect x="-26" y="48" width="52" height="8" rx="2" fill="#159652" stroke="#0a2e1c" stroke-width="2"/>
+        <rect x="-20" y="56" width="40" height="6" rx="2" fill="#0d7540" stroke="#0a2e1c" stroke-width="1.5"/>
+      </g>
+
+      <!-- beach shack -->
+      <g transform="translate(620,500)">
+        <rect x="-70" y="-10" width="140" height="55" fill="#fff" stroke="#0a2e1c" stroke-width="2.5" rx="2"/>
+        <polygon points="-78,-10 78,-10 0,-48" fill="#159652" stroke="#0a2e1c" stroke-width="2.5"/>
+        <rect x="-55" y="-38" width="110" height="18" rx="3" fill="#ff0080" stroke="#0a2e1c" stroke-width="2"/>
+        <text x="0" y="-24" font-family="Victor Mono, monospace" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">GOA BEACH</text>
+        <rect x="-62" y="45" width="12" height="22" fill="#fffbe8" stroke="#0a2e1c" stroke-width="2"/>
+        <rect x="-42" y="45" width="12" height="22" fill="#fffbe8" stroke="#0a2e1c" stroke-width="2"/>
+        <rect x="30" y="45" width="12" height="22" fill="#fffbe8" stroke="#0a2e1c" stroke-width="2"/>
+        <!-- surfboards -->
+        <rect x="52" y="-30" width="10" height="70" rx="5" fill="#fff" stroke="#0a2e1c" stroke-width="2" transform="rotate(-8 57 -30)"/>
+        <rect x="66" y="-26" width="10" height="66" rx="5" fill="#159652" stroke="#0a2e1c" stroke-width="2" transform="rotate(6 71 -26)"/>
+      </g>
+
+      <!-- walkers -->
+      <g class="walker w1">
+        <circle cx="0" cy="-28" r="7" fill="#fff" stroke="#0a2e1c" stroke-width="2"/>
+        <line x1="0" y1="-21" x2="0" y2="-4" stroke="#0a2e1c" stroke-width="3" stroke-linecap="round"/>
+        <line x1="0" y1="-4" x2="-8" y2="12" stroke="#0a2e1c" stroke-width="3" stroke-linecap="round"/>
+        <line x1="0" y1="-4" x2="8" y2="10" stroke="#0a2e1c" stroke-width="3" stroke-linecap="round"/>
+        <line x1="0" y1="-16" x2="-10" y2="-8" stroke="#0a2e1c" stroke-width="3" stroke-linecap="round"/>
+        <line x1="0" y1="-16" x2="10" y2="-10" stroke="#0a2e1c" stroke-width="3" stroke-linecap="round"/>
+      </g>
+      <g class="walker w2">
+        <circle cx="0" cy="-28" r="7" fill="#fff" stroke="#0a2e1c" stroke-width="2"/>
+        <line x1="0" y1="-21" x2="0" y2="-4" stroke="#0a2e1c" stroke-width="3" stroke-linecap="round"/>
+        <line x1="0" y1="-4" x2="-8" y2="12" stroke="#0a2e1c" stroke-width="3" stroke-linecap="round"/>
+        <line x1="0" y1="-4" x2="8" y2="10" stroke="#0a2e1c" stroke-width="3" stroke-linecap="round"/>
+        <line x1="0" y1="-16" x2="-10" y2="-8" stroke="#0a2e1c" stroke-width="3" stroke-linecap="round"/>
+        <line x1="0" y1="-16" x2="10" y2="-10" stroke="#0a2e1c" stroke-width="3" stroke-linecap="round"/>
+      </g>
+
+      <!-- mid palms -->
+      <g transform="translate(480,820) scale(0.7)">
+        <g class="palm p3">
+          <rect x="-8" y="-200" width="16" height="200" fill="#fffbe8" stroke="#0a2e1c" stroke-width="2"/>
+          <g fill="#0d7540" stroke="#0a2e1c" stroke-width="1.5">
+            <path d="M0 -196 C-70 -230,-120 -200,-95 -150 C-55 -178,-25 -190,0 -196 Z"/>
+            <path d="M0 -196 C70 -230,120 -200,95 -150 C55 -178,25 -190,0 -196 Z"/>
+            <path d="M0 -196 C-10 -260,-4 -300,0 -318 C6 -300,10 -260,0 -196 Z"/>
+          </g>
+        </g>
+      </g>
+      <g transform="translate(960,820) scale(0.65)">
+        <g class="palm p4">
+          <rect x="-8" y="-190" width="16" height="190" fill="#fffbe8" stroke="#0a2e1c" stroke-width="2"/>
+          <g fill="#159652" stroke="#0a2e1c" stroke-width="1.5">
+            <path d="M0 -186 C-70 -220,-120 -190,-95 -140 C-55 -168,-25 -180,0 -186 Z"/>
+            <path d="M0 -186 C70 -220,120 -190,95 -140 C55 -168,25 -180,0 -186 Z"/>
+            <path d="M0 -186 C-10 -250,-4 -290,0 -308 C6 -290,10 -250,0 -186 Z"/>
+          </g>
+        </g>
+      </g>
+
+      <!-- foreground buildings -->
+      <g class="buildings">
+        <rect x="0" y="620" width="180" height="200" fill="#fff" stroke="#0a2e1c" stroke-width="2.5"/>
+        <polygon points="0,620 90,560 180,620" fill="#159652" stroke="#0a2e1c" stroke-width="2.5"/>
+        <rect x="20" y="660" width="40" height="35" fill="#fee101" stroke="#0a2e1c" stroke-width="2"/>
+        <rect x="80" y="670" width="30" height="50" fill="#ff0080" stroke="#0a2e1c" stroke-width="2"/>
+
+        <rect x="200" y="650" width="160" height="170" fill="#fff" stroke="#0a2e1c" stroke-width="2.5"/>
+        <polygon points="200,650 280,590 360,650" fill="#0d7540" stroke="#0a2e1c" stroke-width="2.5"/>
+        <rect x="220" y="690" width="50" height="30" fill="#fee101" stroke="#0a2e1c" stroke-width="2"/>
+
+        <rect x="1080" y="630" width="200" height="190" fill="#fff" stroke="#0a2e1c" stroke-width="2.5"/>
+        <polygon points="1080,630 1180,570 1280,630" fill="#159652" stroke="#0a2e1c" stroke-width="2.5"/>
+        <rect x="1100" y="670" width="45" height="40" fill="#ff0080" stroke="#0a2e1c" stroke-width="2"/>
+        <rect x="1160" y="680" width="35" height="55" fill="#fee101" stroke="#0a2e1c" stroke-width="2"/>
+
+        <rect x="1300" y="640" width="140" height="180" fill="#fff" stroke="#0a2e1c" stroke-width="2.5"/>
+        <polygon points="1300,640 1370,585 1440,640" fill="#0f8450" stroke="#0a2e1c" stroke-width="2.5"/>
+      </g>
+
+      <!-- roof texture lines -->
+      <g stroke="#fff" stroke-width="1.5" opacity="0.35">
+        <line x1="10" y1="575" x2="170" y2="605"/>
+        <line x1="10" y1="585" x2="170" y2="615"/>
+        <line x1="210" y1="605" x2="350" y2="635"/>
+        <line x1="1090" y1="585" x2="1270" y2="615"/>
+        <line x1="1310" y1="595" x2="1430" y2="625"/>
+      </g>
+    </svg>
+    <div class="goa-bg-overlay"></div>
+    <div class="goa-bg-fade"></div>
+  </div>
 
 <nav class="nav">
-  <div class="logo-badge">2:47<br>PM<br>STUDIO</div>
+  <a href="https://hhgoa.com/" target="_blank" rel="noopener" class="logo-link" aria-label="HH Goa official site">
+    <img src="https://hhgoa.com/assets/2-47.svg" alt="2:47 PM Studio" class="logo-img" width="56" height="55">
+  </a>
   <div class="nav-right">
-    <span>GOA, INDIA · 28–31 OCT 2026</span>
-    <a href="#generator" class="nav-cta">MAKE MINE</a>
+    <span class="nav-meta">GOA, INDIA · 28–31 OCT 2026</span>
+    <div class="nav-actions">
+      <button type="button" class="nav-cta" id="checkHypeBtn">CHECK HYPE</button>
+      <a href="#generator" class="nav-cta">MAKE MINE</a>
+    </div>
   </div>
 </nav>
 
 <section class="hero">
-  <span class="eyebrow">HH GOA 2026 · 28–31 OCT · GOA, INDIA</span>
+  <span class="eyebrow">BUILDER ID GENERATOR</span>
   <div class="wordmark">
     <h1 class="title">HACKER HOUSE</h1>
-    <div class="goa-sticker animated-sticker">गोवा</div>
+    <div class="goa-sticker animated-sticker" aria-label="Goa in Hindi">गोवा</div>
   </div>
-  <div class="subtitle">BUILDER ID & PASSPORT GENERATOR · #FrameInGoa</div>
+  <div class="hero-divider" aria-hidden="true"></div>
+  <div class="subtitle">BUILDER ID GENERATOR · #FrameInGoa</div>
   <p class="hero-desc">Upload a photo or snap with webcam, add your stack, and generate your official Hacker House Goa 2026 Builder ID passport. Download & post on X with <strong>#FrameInGoa</strong>.</p>
+  <a href="#generator" class="hero-cta">Start Building →</a>
 </section>
-
-<section class="scene" aria-hidden="true">
-  <svg viewBox="0 0 1200 400" preserveAspectRatio="xMidYMax slice">
-    <rect width="1200" height="400" fill="#0e6b3f"/>
-    <g class="sun-glow">
-      <g stroke="#f6c81a" stroke-width="6" stroke-linecap="round" opacity="0.9">
-        <line x1="600" y1="70" x2="600" y2="30"/>
-        <line x1="655" y1="82" x2="678" y2="46"/>
-        <line x1="545" y1="82" x2="522" y2="46"/>
-        <line x1="695" y1="118" x2="726" y2="98"/>
-        <line x1="505" y1="118" x2="474" y2="98"/>
-        <line x1="480" y1="170" x2="440" y2="170"/>
-        <line x1="720" y1="170" x2="760" y2="170"/>
-      </g>
-      <circle cx="600" cy="170" r="95" fill="#f6c81a"/>
-    </g>
-    <path d="M0 190 Q150 150 320 185 T600 175 T900 190 T1200 175 V400H0Z" fill="#12844c"/>
-    <circle cx="330" cy="150" r="30" fill="#12844c"/>
-    <circle cx="900" cy="155" r="24" fill="#12844c"/>
-    <g class="wave-line" opacity="0.6">
-      <path d="M0 250 Q40 240 80 250 T160 250 T240 250 T320 250 T400 250 T480 250 T560 250 T640 250 T720 250 T800 250 T880 250 T960 250 T1040 250 T1120 250 T1200 250" stroke="#f6c81a" stroke-width="3" fill="none"/>
-    </g>
-    <g class="boat" transform="translate(210,235)">
-      <path d="M-22 0 L22 0 L14 12 L-14 12 Z" fill="#fffaf0"/>
-      <line x1="0" y1="0" x2="0" y2="-18" stroke="#fffaf0" stroke-width="2"/>
-      <path d="M0 -18 L14 -6 L0 -6 Z" fill="#fffaf0"/>
-    </g>
-    <path d="M0 270 Q150 250 300 268 T600 262 T900 270 T1200 260 V400H0Z" fill="#0a4a2c"/>
-    <g class="walker" transform="translate(0,320)">
-      <circle cx="0" cy="-34" r="6" fill="#fffaf0"/>
-      <line x1="0" y1="-28" x2="0" y2="-8" stroke="#fffaf0" stroke-width="3" stroke-linecap="round"/>
-      <line x1="0" y1="-8" x2="-6" y2="6" stroke="#fffaf0" stroke-width="3" stroke-linecap="round"/>
-      <line x1="0" y1="-8" x2="6" y2="4" stroke="#fffaf0" stroke-width="3" stroke-linecap="round"/>
-      <line x1="0" y1="-22" x2="-9" y2="-14" stroke="#fffaf0" stroke-width="3" stroke-linecap="round"/>
-      <line x1="0" y1="-22" x2="9" y2="-16" stroke="#fffaf0" stroke-width="3" stroke-linecap="round"/>
-    </g>
-    <g transform="translate(760,300)">
-      <rect x="-46" y="-40" width="92" height="42" fill="#fffaf0"/>
-      <polygon points="-52,-40 52,-40 0,-70" fill="#12844c"/>
-      <rect x="-58" y="-2" width="24" height="44" fill="#ec1577" transform="skewX(-8)"/>
-      <rect x="-24" y="-30" width="48" height="14" fill="#ec1577"/>
-      <text x="0" y="-20" font-family="Space Mono, monospace" font-size="9" font-weight="700" fill="#fffaf0" text-anchor="middle">BUILDER BOOTH</text>
-    </g>
-    <g transform="translate(560,330)">
-      <path d="M0 0 L0 -50" stroke="#f6c81a" stroke-width="5"/>
-      <path d="M0 -50 L18 -6" stroke="#fffaf0" stroke-width="4"/>
-      <path d="M0 -50 L-18 -6" stroke="#f6c81a" stroke-width="4"/>
-    </g>
-    <g transform="translate(600,335) scale(0.9)">
-      <rect x="-4" y="-46" width="8" height="46" fill="#ec1577"/>
-      <ellipse cx="0" cy="-46" rx="10" ry="26" fill="#fffaf0"/>
-    </g>
-
-    <!-- palm left -->
-    <g class="palm p1" transform="translate(70,400)">
-      <rect x="-8" y="-190" width="16" height="190" fill="#fffaf0"/>
-      <rect x="-8" y="-190" width="16" height="190" fill="#0a4a2c" opacity="0.15"/>
-      <g fill="#12844c" stroke="#fffaf0" stroke-width="2">
-        <path d="M0 -186 C-70 -220,-120 -190,-95 -140 C-55 -168,-25 -180,0 -186 Z"/>
-        <path d="M0 -186 C70 -220,120 -190,95 -140 C55 -168,25 -180,0 -186 Z"/>
-        <path d="M0 -186 C-45 -240,-70 -280,-30 -300 C-10 -260,-3 -220,0 -186 Z"/>
-        <path d="M0 -186 C45 -240,70 -280,30 -300 C10 -260,3 -220,0 -186 Z"/>
-        <path d="M0 -186 C-10 -250,-4 -290,0 -308 C6 -290,10 -250,0 -186 Z"/>
-      </g>
-    </g>
-    <!-- palm right -->
-    <g class="palm p2" transform="translate(1130,400) scale(-1,1)">
-      <rect x="-8" y="-230" width="16" height="230" fill="#fffaf0"/>
-      <g fill="#159652" stroke="#fffaf0" stroke-width="2">
-        <path d="M0 -226 C-70 -260,-120 -230,-95 -180 C-55 -208,-25 -220,0 -226 Z"/>
-        <path d="M0 -226 C70 -260,120 -230,95 -180 C55 -208,25 -220,0 -226 Z"/>
-        <path d="M0 -226 C-45 -280,-70 -320,-30 -340 C-10 -300,-3 -260,0 -226 Z"/>
-        <path d="M0 -226 C45 -280,70 -320,30 -340 C10 -300,3 -260,0 -226 Z"/>
-        <path d="M0 -226 C-10 -290,-4 -330,0 -348 C6 -330,10 -290,0 -226 Z"/>
-      </g>
-    </g>
-    <!-- small palm center -->
-    <g class="palm p3" transform="translate(920,400) scale(0.55)">
-      <rect x="-8" y="-190" width="16" height="190" fill="#fffaf0"/>
-      <g fill="#12844c" stroke="#fffaf0" stroke-width="2">
-        <path d="M0 -186 C-70 -220,-120 -190,-95 -140 C-55 -168,-25 -180,0 -186 Z"/>
-        <path d="M0 -186 C70 -220,120 -190,95 -140 C55 -168,25 -180,0 -186 Z"/>
-        <path d="M0 -186 C-10 -250,-4 -290,0 -308 C6 -290,10 -250,0 -186 Z"/>
-      </g>
-    </g>
-  </svg>
-</section>
+</div>
 
 <main id="generator">
+  <div class="section-label">Build This</div>
   <div class="layout">
     <!-- FORM PANEL -->
     <div class="panel">
@@ -158,6 +282,7 @@
         </button>
       </div>
       <input type="file" id="fileInput" accept="image/*,.heic,.heif">
+      <input type="file" id="cameraCaptureInput" accept="image/*" capture="user" hidden>
 
       <div class="photo-controls-row" id="zoomRow" style="display:none">
         <div class="zoom-control">
@@ -179,7 +304,7 @@
         <input type="text" id="role" placeholder="e.g. Full‑Stack, Solidity, Design" maxlength="26">
       </div>
       <div class="field" style="margin-bottom:0">
-        <label>Builder Title <span style="color:#5a6a5f;text-transform:none;letter-spacing:0;font-weight:400">(auto‑generated)</span></label>
+        <label>Builder Title <span class="label-hint">(auto‑generated)</span></label>
         <div class="title-row">
           <div class="title-box" id="titleBox">Sunset Ship Wizard</div>
           <button class="iconbtn" id="rerollBtn" title="Reroll title" aria-label="Reroll builder title">
@@ -214,11 +339,11 @@
   </div>
 </main>
 
-<div class="rickrack"></div>
+<div class="rickrack" aria-hidden="true"></div>
 <footer>
   <div class="foot-title">HH GOA · 2026</div>
   <p>GOA, INDIA · 28–31 OCT 2026 · #FrameInGoa</p>
-  <p class="credit">Fan‑made builder tool · visual identity inspired by 2:47 PM Studio's HH Goa 2026 brand</p>
+  <p class="credit">Fan‑made builder tool · visual identity inspired by <a href="https://hhgoa.com/" target="_blank" rel="noopener">2:47 PM Studio's HH Goa 2026 brand</a></p>
 </footer>
 
 <!-- WEBCAM MODAL -->
@@ -254,6 +379,18 @@
       </button>
       <button class="btn btn-ghost" id="cancelWebcamBtn">Cancel</button>
     </div>
+  </div>
+</div>
+
+<!-- CHECK HYPE VIDEO MODAL -->
+<div class="hype-overlay" id="hypeModal" hidden>
+  <div class="hype-viewport">
+    <video id="hypeVideo" src="https://hhgoa.com/Prehype.mp4" loop playsinline webkit-playsinline preload="auto" aria-label="HH Goa pre-hype video"></video>
+    <button type="button" class="hype-close" id="closeHypeBtn" aria-label="Close video">&times;</button>
+    <button type="button" class="hype-mute" id="hypeMuteBtn" aria-label="Mute video">
+      <svg class="icon-unmuted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+      <svg class="icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:none"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+    </button>
   </div>
 </div>
 

@@ -18,6 +18,51 @@ const ctx=canvas.getContext('2d');
 const CW=1080, CH=1350;
 const PB={x:80,y:300,w:440,h:560};
 
+function isMobileDevice(){
+  return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)
+    || (navigator.maxTouchPoints > 1 && window.innerWidth <= 900);
+}
+
+function downloadBlob(blob, filename){
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+}
+
+function openXComposer(text, desktopWin){
+  const encoded=encodeURIComponent(text);
+  const webUrl=`https://twitter.com/intent/tweet?text=${encoded}`;
+  const ua=navigator.userAgent;
+  const isIOS=/iPhone|iPad|iPod/i.test(ua);
+  const isAndroid=/Android/i.test(ua);
+
+  if(isIOS){
+    window.location.href=`twitter://post?message=${encoded}`;
+    setTimeout(()=>{ if(document.visibilityState==='visible') window.location.href=webUrl; }, 1200);
+    return;
+  }
+
+  if(isAndroid){
+    window.location.href=`intent://twitter.com/intent/tweet?text=${encoded}#Intent;scheme=https;package=com.twitter.android;S.browser_fallback_url=${encodeURIComponent(webUrl)};end`;
+    return;
+  }
+
+  // Desktop: reuse the tab we opened synchronously on click (see shareBtn
+  // handler) so the browser doesn't treat this as a blocked popup once the
+  // async clipboard/image work finishes. Falls back to a fresh window.open
+  // if that tab isn't available for some reason.
+  if(desktopWin && !desktopWin.closed){
+    desktopWin.location.href=webUrl;
+  }else{
+    window.open(webUrl, '_blank', 'noopener,noreferrer');
+  }
+}
+
 /* ================= image loading (HEIC/JPG/PNG safe) ================= */
 async function loadImageFile(file){
   try{
@@ -96,65 +141,65 @@ function draw(){
   ctx.clearRect(0,0,CW,CH);
 
   const bg=ctx.createLinearGradient(0,0,0,CH);
-  bg.addColorStop(0,'#faf5e2'); bg.addColorStop(1,'#f0e6c8');
+  bg.addColorStop(0,'#fffbe8'); bg.addColorStop(1,'#f5eed0');
   ctx.fillStyle=bg; ctx.fillRect(0,0,CW,CH);
   ctx.fillStyle=ctx.createPattern(NOISE_TILE,'repeat'); ctx.fillRect(0,0,CW,CH);
 
   ctx.save();
-  ctx.globalAlpha=.05; ctx.fillStyle='#0e6b3f';
+  ctx.globalAlpha=.05; ctx.fillStyle='#0b6839';
   ctx.beginPath(); ctx.arc(800,560,230,0,Math.PI*2); ctx.fill();
   ctx.restore();
 
   ctx.save();
-  ctx.strokeStyle='#f6c81a'; ctx.lineWidth=3;
+  ctx.strokeStyle='#fee101'; ctx.lineWidth=3;
   roundRect(ctx,26,26,CW-52,CH-52,20); ctx.stroke();
-  ctx.strokeStyle='#0a4a2c'; ctx.lineWidth=1;
+  ctx.strokeStyle='#064a28'; ctx.lineWidth=1;
   roundRect(ctx,36,36,CW-72,CH-72,16); ctx.stroke();
   ctx.restore();
 
   /* header band */
   const hg=ctx.createLinearGradient(0,0,CW,0);
-  hg.addColorStop(0,'#062c1a'); hg.addColorStop(.5,'#0a4a2c'); hg.addColorStop(1,'#0e6b3f');
+  hg.addColorStop(0,'#064a28'); hg.addColorStop(.5,'#085c32'); hg.addColorStop(1,'#0b6839');
   ctx.fillStyle=hg;
   roundRect(ctx,50,50,CW-100,150,14); ctx.fill();
-  drawGuilloche(ctx,60,60,CW-120,20,'#f6c81a',3);
+  drawGuilloche(ctx,60,60,CW-120,20,'#fee101',3);
 
   /* crest */
   ctx.save();
   ctx.translate(120,125);
-  ctx.strokeStyle='#f6c81a'; ctx.lineWidth=2.5;
+  ctx.strokeStyle='#fee101'; ctx.lineWidth=2.5;
   ctx.beginPath(); ctx.arc(0,0,42,0,Math.PI*2); ctx.stroke();
-  ctx.fillStyle='#f6c81a';
+  ctx.fillStyle='#fee101';
   ctx.beginPath(); ctx.arc(0,-6,14,0,Math.PI*2); ctx.fill();
   ctx.beginPath();
   ctx.moveTo(-30,16); ctx.quadraticCurveTo(-15,4,0,16); ctx.quadraticCurveTo(15,28,30,16);
-  ctx.lineWidth=3; ctx.strokeStyle='#f6c81a'; ctx.stroke();
-  ctx.font="700 12px 'Bodoni Moda', serif"; ctx.fillStyle='#f6c81a'; ctx.textAlign='center';
+  ctx.lineWidth=3; ctx.strokeStyle='#fee101'; ctx.stroke();
+  ctx.font="700 12px 'Imbue', serif"; ctx.fillStyle='#fee101'; ctx.textAlign='center';
   ctx.fillText('HH',0,44);
   ctx.restore();
 
   ctx.textAlign='left';
-  ctx.fillStyle='#f6c81a';
-  ctx.font="900 40px 'Bodoni Moda', serif";
+  ctx.fillStyle='#fee101';
+  ctx.font="900 40px 'Imbue', serif";
   ctx.fillText('HACKER HOUSE',180,108);
   ctx.font="700 20px 'Noto Sans Devanagari', sans-serif";
-  ctx.fillStyle='#ff8fc4';
+  ctx.fillStyle='#ff66b8';
   ctx.fillText('गोवा · BUILDER ID',180,142);
-  ctx.font="700 12px 'Space Mono', monospace";
-  ctx.fillStyle='#f7f1dc'; ctx.globalAlpha=.9;
+  ctx.font="700 12px 'Victor Mono', monospace";
+  ctx.fillStyle='#fffbe8'; ctx.globalAlpha=.9;
   ctx.fillText('TYPE · B    CODE · HHG26    NO. '+state.passportNo,180,170);
   ctx.globalAlpha=1;
 
   /* GOA badge top right */
   ctx.save();
   ctx.translate(CW-150,60);
-  ctx.fillStyle='#ec1577';
+  ctx.fillStyle='#ff0080';
   roundRect(ctx,0,0,100,60,10); ctx.fill();
   ctx.strokeStyle='#fff'; ctx.lineWidth=3; roundRect(ctx,0,0,100,60,10); ctx.stroke();
   ctx.fillStyle='#fff'; ctx.textAlign='center';
-  ctx.font="900 26px 'Bodoni Moda', serif";
+  ctx.font="900 26px 'Imbue', serif";
   ctx.fillText('GOA',50,32);
-  ctx.font="700 10px 'Space Mono', monospace";
+  ctx.font="700 10px 'Victor Mono', monospace";
   ctx.fillText('2 0 2 6',50,50);
   ctx.restore();
 
@@ -162,7 +207,7 @@ function draw(){
   ctx.save();
   ctx.fillStyle='#00000022';
   roundRect(ctx,PB.x-6,PB.y-6,PB.w+12,PB.h+12,10); ctx.fill();
-  ctx.strokeStyle='#f6c81a'; ctx.lineWidth=4;
+  ctx.strokeStyle='#fee101'; ctx.lineWidth=4;
   roundRect(ctx,PB.x-6,PB.y-6,PB.w+12,PB.h+12,10); ctx.stroke();
 
   ctx.save();
@@ -186,17 +231,17 @@ function draw(){
     ctx.drawImage(state.img, -dw/2, -dh/2, dw, dh);
     ctx.restore();
 
-    ctx.fillStyle='rgba(10,74,44,.06)'; ctx.fillRect(PB.x,PB.y,PB.w,PB.h);
+    ctx.fillStyle='rgba(11,104,57,.06)'; ctx.fillRect(PB.x,PB.y,PB.w,PB.h);
   }else{
-    ctx.fillStyle='#dcd2ac'; ctx.fillRect(PB.x,PB.y,PB.w,PB.h);
-    ctx.fillStyle='#8a8368'; ctx.font="14px 'Space Mono', monospace"; ctx.textAlign='center';
+    ctx.fillStyle='#e8dfc0'; ctx.fillRect(PB.x,PB.y,PB.w,PB.h);
+    ctx.fillStyle='#8a8368'; ctx.font="14px 'Victor Mono', monospace"; ctx.textAlign='center';
     ctx.fillText('YOUR PHOTO', PB.x+PB.w/2, PB.y+PB.h/2);
   }
   ctx.restore();
   ctx.restore();
 
   ctx.save();
-  ctx.strokeStyle='#0a4a2c'; ctx.lineWidth=3;
+  ctx.strokeStyle='#064a28'; ctx.lineWidth=3;
   const tks=[[PB.x-14,PB.y-14,1,1],[PB.x+PB.w+14,PB.y-14,-1,1],[PB.x-14,PB.y+PB.h+14,1,-1],[PB.x+PB.w+14,PB.y+PB.h+14,-1,-1]];
   tks.forEach(([x,y,dx,dy])=>{ ctx.beginPath(); ctx.moveTo(x,y+22*dy); ctx.lineTo(x,y); ctx.lineTo(x+22*dx,y); ctx.stroke(); });
   ctx.restore();
@@ -206,14 +251,14 @@ function draw(){
   ctx.translate(PB.x+PB.w-16, PB.y+PB.h-10);
   ctx.rotate(-0.26);
   ctx.globalAlpha=.88;
-  ctx.strokeStyle='#ec1577'; ctx.fillStyle='#ec1577';
+  ctx.strokeStyle='#ff0080'; ctx.fillStyle='#ff0080';
   ctx.lineWidth=2.5;
   ctx.beginPath(); ctx.arc(0,0,74,0,Math.PI*2); ctx.stroke();
   ctx.beginPath(); ctx.arc(0,0,64,0,Math.PI*2); ctx.stroke();
-  ctx.font="800 13px 'Bodoni Moda', serif"; ctx.textAlign='center';
+  ctx.font="800 13px 'Imbue', serif"; ctx.textAlign='center';
   ctx.fillText('VERIFIED',0,-4);
   ctx.fillText('BUILDER',0,14);
-  textOnArc(ctx,'★ HACKER HOUSE GOA 2026 ★ FRAME IN GOA ',0,0,52,-Math.PI/2, (Math.PI*2)/40,"700 9px 'Space Mono', monospace",'#ec1577');
+  textOnArc(ctx,'★ HACKER HOUSE GOA 2026 ★ FRAME IN GOA ',0,0,52,-Math.PI/2, (Math.PI*2)/40,"700 9px 'Victor Mono', monospace",'#ff0080');
   ctx.globalAlpha=1;
   ctx.restore();
 
@@ -230,15 +275,15 @@ function draw(){
   let ry=300;
   rows.forEach(([label,val])=>{
     ctx.textAlign='left';
-    ctx.font="700 12px 'Space Mono', monospace";
-    ctx.fillStyle='#ec1577';
+    ctx.font="700 12px 'Victor Mono', monospace";
+    ctx.fillStyle='#ff0080';
     ctx.fillText(label, dx, ry);
-    ctx.font="700 27px 'Bodoni Moda', serif";
+    ctx.font="700 27px 'Imbue', serif";
     ctx.fillStyle='#0a2e1c';
     let v=val;
-    while(ctx.measureText(v).width>dw && ctx.font.includes('27px')){ ctx.font="700 22px 'Bodoni Moda', serif"; }
+    while(ctx.measureText(v).width>dw && ctx.font.includes('27px')){ ctx.font="700 22px 'Imbue', serif"; }
     ctx.fillText(v, dx, ry+32);
-    ctx.strokeStyle='rgba(10,74,44,.22)'; ctx.lineWidth=1;
+    ctx.strokeStyle='rgba(11,104,57,.22)'; ctx.lineWidth=1;
     ctx.beginPath(); ctx.moveTo(dx,ry+44); ctx.lineTo(dx+dw,ry+44); ctx.stroke();
     ry+=88;
   });
@@ -250,16 +295,16 @@ function draw(){
   const cells=14, cell=qs/cells;
   let seed=(state.passportNo.length*7+(document.getElementById('name').value||'x').length*13);
   function rnd(){ seed=(seed*9301+49297)%233280; return seed/233280; }
-  ctx.fillStyle='#f7f1dc';
+  ctx.fillStyle='#fffbe8';
   for(let i=0;i<cells;i++)for(let j=0;j<cells;j++){
     if(rnd()>0.52) ctx.fillRect(qx+i*cell+1, qy+j*cell+1, cell-2, cell-2);
   }
   [[0,0],[cells-3,0],[0,cells-3]].forEach(([fx,fy])=>{
-    ctx.fillStyle='#f7f1dc'; ctx.fillRect(qx+fx*cell,qy+fy*cell,cell*3,cell*3);
+    ctx.fillStyle='#fffbe8'; ctx.fillRect(qx+fx*cell,qy+fy*cell,cell*3,cell*3);
     ctx.fillStyle='#0a2e1c'; ctx.fillRect(qx+fx*cell+cell*0.5,qy+fy*cell+cell*0.5,cell*2,cell*2);
-    ctx.fillStyle='#f7f1dc'; ctx.fillRect(qx+fx*cell+cell,qy+fy*cell+cell,cell,cell);
+    ctx.fillStyle='#fffbe8'; ctx.fillRect(qx+fx*cell+cell,qy+fy*cell+cell,cell,cell);
   });
-  ctx.font="700 10px 'Space Mono', monospace"; ctx.fillStyle='#ec1577'; ctx.textAlign='left';
+  ctx.font="700 10px 'Victor Mono', monospace"; ctx.fillStyle='#ff0080'; ctx.textAlign='left';
   ctx.fillText('SCAN TO VERIFY', qx, qy+qs+20);
   ctx.restore();
 
@@ -267,13 +312,13 @@ function draw(){
   ctx.save();
   const hx=880, hy=975, hr=76;
   const holo=ctx.createRadialGradient(hx-20,hy-20,4,hx,hy,hr);
-  holo.addColorStop(0,'#fffbe8'); holo.addColorStop(.35,'#ffe066'); holo.addColorStop(.65,'#ff9ec8'); holo.addColorStop(1,'#8fe0c2');
+  holo.addColorStop(0,'#fffbe8'); holo.addColorStop(.35,'#fee101'); holo.addColorStop(.65,'#ff66b8'); holo.addColorStop(1,'#8fe0c2');
   ctx.globalAlpha=.88;
   ctx.fillStyle=holo; ctx.beginPath(); ctx.arc(hx,hy,hr,0,Math.PI*2); ctx.fill();
   ctx.globalAlpha=1;
-  ctx.strokeStyle='#0a4a2c'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(hx,hy,hr,0,Math.PI*2); ctx.stroke();
-  textOnArc(ctx,'★ OFFICIAL SEAL ★ HH GOA 2026 ★ ',hx,hy,58,-Math.PI/2,(Math.PI*2)/34,"700 8px 'Space Mono', monospace",'#0a4a2c');
-  ctx.fillStyle='#0a4a2c'; ctx.font="900 20px 'Bodoni Moda', serif"; ctx.textAlign='center';
+  ctx.strokeStyle='#064a28'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(hx,hy,hr,0,Math.PI*2); ctx.stroke();
+  textOnArc(ctx,'★ OFFICIAL SEAL ★ HH GOA 2026 ★ ',hx,hy,58,-Math.PI/2,(Math.PI*2)/34,"700 8px 'Victor Mono', monospace",'#064a28');
+  ctx.fillStyle='#064a28'; ctx.font="900 20px 'Imbue', serif"; ctx.textAlign='center';
   ctx.fillText('247', hx, hy+8);
   ctx.restore();
 
@@ -288,29 +333,43 @@ function draw(){
   const line2=toMRZ(state.passportNo.replace('-',''),9)+'4GOA'+nat3+'<261028M311031'+toMRZ('HHGOA26'+nat3,14)+'2';
 
   ctx.save();
-  ctx.fillStyle='#f0e6c8'; ctx.fillRect(60,1170,CW-120,120);
-  ctx.strokeStyle='#f6c81a'; ctx.lineWidth=1.5; ctx.strokeRect(60,1170,CW-120,120);
-  ctx.font="700 30px 'Space Mono', monospace"; ctx.fillStyle='#0a2e1c'; ctx.textAlign='left';
+  ctx.fillStyle='#f5eed0'; ctx.fillRect(60,1170,CW-120,120);
+  ctx.strokeStyle='#fee101'; ctx.lineWidth=1.5; ctx.strokeRect(60,1170,CW-120,120);
+  ctx.font="700 30px 'Victor Mono', monospace"; ctx.fillStyle='#0a2e1c'; ctx.textAlign='left';
   ctx.fillText(spaced(line1.slice(0,30)), 80, 1218);
   ctx.fillText(spaced(line2.slice(0,30)), 80, 1262);
   ctx.restore();
 
   /* footer bar */
   const fg=ctx.createLinearGradient(0,CH-100,CW,CH-100);
-  fg.addColorStop(0,'#0e6b3f'); fg.addColorStop(.5,'#ec1577'); fg.addColorStop(1,'#f6c81a');
+  fg.addColorStop(0,'#0b6839'); fg.addColorStop(.5,'#ff0080'); fg.addColorStop(1,'#fee101');
   ctx.fillStyle=fg;
   roundRect(ctx,50,CH-118,CW-100,68,14); ctx.fill();
   ctx.fillStyle='#fff'; ctx.textAlign='left';
-  ctx.font="700 20px 'Bodoni Moda', serif";
+  ctx.font="700 20px 'Imbue', serif";
   ctx.fillText('GOA, INDIA · 28–31 OCT 2026', 76, CH-78);
   ctx.textAlign='right';
-  ctx.font="700 16px 'Space Mono', monospace";
+  ctx.font="700 16px 'Victor Mono', monospace";
   ctx.fillText('#FrameInGoa', CW-76, CH-78);
+
+  scheduleShareBlobCache();
+}
+
+/* ================= share blob cache (keeps user-gesture alive for navigator.share) ================= */
+let cachedShareBlob=null;
+let shareBlobTimer=null;
+
+function scheduleShareBlobCache(){
+  if(shareBlobTimer) clearTimeout(shareBlobTimer);
+  shareBlobTimer=setTimeout(()=>{
+    canvas.toBlob(blob=>{ if(blob) cachedShareBlob=blob; }, 'image/png', 1);
+  }, 120);
 }
 
 /* ================= interaction ================= */
 const dropzone=document.getElementById('dropzone');
 const fileInput=document.getElementById('fileInput');
+const cameraCaptureInput=document.getElementById('cameraCaptureInput');
 const thumb=document.getElementById('thumb');
 const dzText=document.getElementById('dzText');
 const statusEl=document.getElementById('status');
@@ -324,6 +383,13 @@ dropzone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')fileInpu
 ['dragleave','drop'].forEach(ev=>dropzone.addEventListener(ev,e=>{e.preventDefault();dropzone.classList.remove('drag');}));
 dropzone.addEventListener('drop',e=>{ const f=e.dataTransfer.files[0]; if(f) handleFile(f); });
 fileInput.addEventListener('change',e=>{ const f=e.target.files[0]; if(f) handleFile(f); });
+if(cameraCaptureInput){
+  cameraCaptureInput.addEventListener('change',e=>{
+    const f=e.target.files[0];
+    if(f) handleFile(f);
+    cameraCaptureInput.value='';
+  });
+}
 
 function setImageSource(img, previewUrl){
   state.img=img; state.zoom=1; state.offX=0; state.offY=0; state.rotation=0;
@@ -378,43 +444,57 @@ async function startWebcam(){
   stopWebcam();
   webcamError.hidden=true;
   webcamError.textContent='';
-  
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
-    showWebcamError('Webcam access is not supported by your browser or connection.');
+
+  if(!window.isSecureContext){
+    showWebcamError('Camera in the browser needs HTTPS. Use "Take Photo" on mobile (opens your phone camera) or upload a photo instead.');
     return;
   }
 
-  try{
-    const constraints={
-      video:{
-        facingMode:currentFacingMode,
-        width:{ideal:1280},
-        height:{ideal:1280}
-      },
-      audio:false
-    };
-    webcamStream=await navigator.mediaDevices.getUserMedia(constraints);
-    webcamVideo.srcObject=webcamStream;
-    
-    if(currentFacingMode==='environment'){
-      webcamVideo.classList.add('no-mirror');
-    }else{
-      webcamVideo.classList.remove('no-mirror');
-    }
-    
-    await webcamVideo.play();
-    checkMultipleCameras();
-  }catch(err){
-    let msg='Could not access webcam.';
-    if(err.name==='NotAllowedError'||err.name==='PermissionDeniedError'){
-      msg='Camera permission was denied. Please allow camera access in browser settings.';
-    }else if(err.name==='NotFoundError'||err.name==='DevicesNotFoundError'){
-      msg='No camera device found on your system.';
-    }else if(err.name==='NotReadableError'||err.name==='TrackStartError'){
-      msg='Camera is currently in use by another application.';
-    }
-    showWebcamError(msg);
+  const media=navigator.mediaDevices;
+  if(!media||!media.getUserMedia){
+    showWebcamError('Webcam access is not supported in this browser. Try Upload Photo or Take Photo on mobile.');
+    return;
   }
+
+  const attempts=[
+    {video:{facingMode:currentFacingMode, width:{ideal:1280}, height:{ideal:1280}}, audio:false},
+    {video:{facingMode:currentFacingMode}, audio:false},
+    {video:true, audio:false}
+  ];
+
+  let lastErr=null;
+  for(const constraints of attempts){
+    try{
+      webcamStream=await media.getUserMedia(constraints);
+      webcamVideo.srcObject=webcamStream;
+
+      if(currentFacingMode==='environment'){
+        webcamVideo.classList.add('no-mirror');
+      }else{
+        webcamVideo.classList.remove('no-mirror');
+      }
+
+      await webcamVideo.play();
+      checkMultipleCameras();
+      return;
+    }catch(err){
+      lastErr=err;
+    }
+  }
+
+  let msg='Could not access webcam.';
+  if(lastErr){
+    if(lastErr.name==='NotAllowedError'||lastErr.name==='PermissionDeniedError'){
+      msg='Camera permission was denied. Allow camera access in your browser settings, or use Upload Photo.';
+    }else if(lastErr.name==='NotFoundError'||lastErr.name==='DevicesNotFoundError'){
+      msg='No camera found on this device.';
+    }else if(lastErr.name==='NotReadableError'||lastErr.name==='TrackStartError'){
+      msg='Camera is in use by another app. Close it and try again.';
+    }else if(lastErr.name==='OverconstrainedError'){
+      msg='Could not start camera with these settings. Try Upload Photo instead.';
+    }
+  }
+  showWebcamError(msg);
 }
 
 function showWebcamError(msg){
@@ -477,7 +557,18 @@ function snapPhoto(){
   img.src=dataUrl;
 }
 
-webcamBtn.addEventListener('click',openWebcamModal);
+webcamBtn.addEventListener('click',()=>{
+  if(isMobileDevice() || !window.isSecureContext){
+    if(cameraCaptureInput){
+      cameraCaptureInput.click();
+      statusEl.textContent='Opening your phone camera…';
+    }else{
+      openWebcamModal();
+    }
+    return;
+  }
+  openWebcamModal();
+});
 closeWebcamBtn.addEventListener('click',closeWebcamModal);
 cancelWebcamBtn.addEventListener('click',closeWebcamModal);
 snapPhotoBtn.addEventListener('click',snapPhoto);
@@ -529,23 +620,16 @@ document.getElementById('rerollBtn').addEventListener('click',refreshTitle);
 titleBox.textContent=state.title;
 
 function exportCanvas(cb){ canvas.toBlob(blob=>cb(blob), 'image/png', 1); }
+
 document.getElementById('downloadBtn').addEventListener('click',()=>{
   statusEl.textContent='Preparing your builder ID…';
   exportCanvas(blob=>{
-    const a=document.createElement('a');
     const name=(document.getElementById('name').value||'builder').toLowerCase().replace(/[^a-z0-9]+/g,'-');
-    a.href=URL.createObjectURL(blob);
-    a.download=`hhgoa2026-builder-id-${name||'x'}.png`;
-    document.body.appendChild(a); a.click(); a.remove();
+    downloadBlob(blob, `hhgoa2026-builder-id-${name||'x'}.png`);
     statusEl.textContent='Downloaded. Now go post it → #FrameInGoa';
   });
 });
 
-// X's web-intent link only ever accepts TEXT — there is no URL parameter
-// for attaching a local image, so a plain link can never auto-attach the
-// picture on desktop. The best available desktop trick is to put the image
-// on the clipboard so it can be pasted (Ctrl/Cmd+V) straight into the
-// compose box, which X's web composer accepts natively.
 async function copyImageToClipboard(blob){
   try{
     if(!(window.ClipboardItem && navigator.clipboard && navigator.clipboard.write)) return false;
@@ -554,60 +638,176 @@ async function copyImageToClipboard(blob){
   }catch(err){ return false; }
 }
 
+async function copyTextToClipboard(str){
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      await navigator.clipboard.writeText(str);
+      return true;
+    }
+  }catch(err){}
+  return false;
+}
+
+function shareBuilderIdToX(blob, text){
+  // The OS-level "share sheet" (navigator.share) is only worth using on
+  // phones/tablets, where it's the one mechanism that can hand X both the
+  // image and the caption together. On desktop it opens a generic OS share
+  // dialog (not X itself) and would stop us from reliably landing on X, so
+  // desktop always uses the direct compose-window flow in handleShareResult.
+  if(!isMobileDevice() || !navigator.share){
+    return Promise.resolve('fallback');
+  }
+
+  const file=new File([blob], 'hhgoa2026-builder-id.png', {type:'image/png'});
+
+  if(navigator.canShare && !navigator.canShare({files:[file]})){
+    return Promise.resolve('fallback');
+  }
+
+  return navigator.share({files:[file], text})
+    .then(()=>'shared-full')
+    .catch(err=>{
+      if(err && err.name==='AbortError') return 'cancelled';
+
+      return navigator.share({files:[file]})
+        .then(async()=>{
+          await copyTextToClipboard(text);
+          return 'shared-image';
+        })
+        .catch(err2=>{
+          if(err2 && err2.name==='AbortError') return 'cancelled';
+          return 'fallback';
+        });
+    });
+}
+
+function handleShareResult(result, blob, text, fileBase, desktopWin){
+  if(result==='shared-full'){
+    statusEl.textContent='Pick X from the share menu — image and caption are ready.';
+    return;
+  }
+  if(result==='shared-image'){
+    statusEl.textContent='Image shared! Caption copied — paste in X if it is missing.';
+    return;
+  }
+  if(result==='cancelled'){
+    if(desktopWin && !desktopWin.closed) desktopWin.close();
+    statusEl.textContent='Share cancelled.';
+    return;
+  }
+
+  if(isMobileDevice()){
+    // No native share sheet available (or it isn't supported for files) —
+    // save the builder ID and deep-link straight into the X/Twitter app
+    // with the caption already filled in, instead of asking for a 2nd tap.
+    downloadBlob(blob, `hhgoa2026-builder-id-${fileBase}.png`);
+    copyTextToClipboard(text);
+    openXComposer(text);
+    statusEl.textContent='Builder ID saved to your gallery — X is opening with your caption, attach the photo there.';
+    return;
+  }
+
+  // Desktop fallback: reuse the tab opened synchronously on click so it
+  // isn't blocked as a popup, while we finish copying the image.
+  copyImageToClipboard(blob).then(copied=>{
+    openXComposer(text, desktopWin);
+    if(copied){
+      statusEl.textContent='X opened with your caption — press Ctrl/Cmd+V in the compose box to attach the image.';
+    }else{
+      downloadBlob(blob, `hhgoa2026-builder-id-${fileBase}.png`);
+      statusEl.textContent='X opened with your caption — the image also downloaded, attach it there.';
+    }
+  });
+}
+
 document.getElementById('shareBtn').addEventListener('click',()=>{
   const name=document.getElementById('name').value||'a builder';
   const text=`Just picked up my HH Goa 2026 Builder ID 🌴🛂 ${name!=='a builder'?'— '+name:''} heading to Goa, 28–31 Oct. Make yours 👉 @247pmstudio #FrameInGoa #HackerHouseGoa #HHGoa2026`;
+  const fileBase=(document.getElementById('name').value||'builder').toLowerCase().replace(/[^a-z0-9]+/g,'-')||'builder';
+
+  // On desktop, open the destination tab RIGHT NOW, synchronously inside
+  // this click handler. If we wait until after the async image export /
+  // clipboard work finishes, browsers no longer consider it a trusted
+  // user gesture and silently block the popup — that's why "Post on X"
+  // wasn't opening anything on its own before.
+  const desktopWin = !isMobileDevice() ? window.open('', '_blank') : null;
+
+  const proceed = (blob) => {
+    cachedShareBlob=blob;
+    shareBuilderIdToX(blob, text).then(result=>{
+      handleShareResult(result, blob, text, fileBase, desktopWin);
+    });
+  };
+
+  if(cachedShareBlob){
+    statusEl.textContent='Opening share…';
+    proceed(cachedShareBlob);
+    return;
+  }
+
   statusEl.textContent='Preparing share…';
-
-  // Open the tab SYNCHRONOUSLY, in direct response to the click — this is
-  // what keeps browsers from treating it as an unrequested popup. We fill
-  // in its destination once the image export finishes.
-  const xTab = window.open('about:blank', '_blank');
-
-  exportCanvas(async blob=>{
-    const file=new File([blob], 'hhgoa2026-builder-id.png', {type:'image/png'});
-
-    // Mobile: native share sheet attaches the image directly — best path.
-    if(navigator.canShare && navigator.canShare({files:[file]})){
-      if(xTab) xTab.close(); // don't need the blank tab on this path
-      try{
-        await navigator.share({files:[file], text, title:'HH Goa 2026 Builder ID'});
-        statusEl.textContent='Shared! See you in Goa.';
-        return;
-      }catch(err){
-        if(err && err.name==='AbortError'){ statusEl.textContent='Share cancelled.'; return; }
-        // if native share fails for another reason, fall through below
-      }
-    }
-
-    // Desktop: copy the image to the clipboard so it can be pasted straight
-    // into the X compose box, then send the already-open tab to X with the
-    // caption pre-filled.
-    const copied = await copyImageToClipboard(blob);
-
-    const intentUrl='https://twitter.com/intent/tweet?text='+encodeURIComponent(text);
-    if(xTab && !xTab.closed){
-      xTab.location.href=intentUrl;
-    }else{
-      // popup was blocked or closed some other way — try once more,
-      // still inside the same click's event handling
-      window.open(intentUrl, '_blank');
-    }
-
-    if(copied){
-      statusEl.textContent='Image copied — press Ctrl/Cmd+V in the X box that just opened to attach it.';
-    }else{
-      // Clipboard copy isn't supported/allowed here — fall back to a plain
-      // download so the picture is at least on hand to attach manually.
-      const a=document.createElement('a');
-      a.href=URL.createObjectURL(blob);
-      a.download='hhgoa2026-builder-id.png';
-      document.body.appendChild(a); a.click(); a.remove();
-      statusEl.textContent='Image downloaded — attach it in the X tab that just opened.';
-    }
-  });
+  exportCanvas(proceed);
 });
 
 if(document.fonts && document.fonts.ready){ document.fonts.ready.then(draw); }
 draw();
 window.addEventListener('resize',draw);
+
+/* ================= check hype video modal ================= */
+const hypeModal=document.getElementById('hypeModal');
+const hypeVideo=document.getElementById('hypeVideo');
+const checkHypeBtn=document.getElementById('checkHypeBtn');
+const closeHypeBtn=document.getElementById('closeHypeBtn');
+const hypeMuteBtn=document.getElementById('hypeMuteBtn');
+const hypeUnmutedIcon=hypeMuteBtn?.querySelector('.icon-unmuted');
+const hypeMutedIcon=hypeMuteBtn?.querySelector('.icon-muted');
+
+function updateHypeMuteIcon(){
+  if(!hypeVideo||!hypeUnmutedIcon||!hypeMutedIcon||!hypeMuteBtn) return;
+  const muted=hypeVideo.muted;
+  hypeUnmutedIcon.style.display=muted?'none':'block';
+  hypeMutedIcon.style.display=muted?'block':'none';
+  hypeMuteBtn.classList.toggle('is-muted', muted);
+  hypeMuteBtn.setAttribute('aria-label', muted ? 'Unmute video' : 'Mute video');
+}
+
+async function openHypeModal(){
+  if(!hypeModal||!hypeVideo) return;
+  hypeModal.hidden=false;
+  document.body.style.overflow='hidden';
+  hypeVideo.currentTime=0;
+  hypeVideo.muted=false;
+  updateHypeMuteIcon();
+  try{
+    await hypeVideo.play();
+  }catch(err){
+    hypeVideo.muted=true;
+    updateHypeMuteIcon();
+    try{ await hypeVideo.play(); }catch(e){}
+  }
+}
+
+function closeHypeModal(){
+  if(!hypeModal||!hypeVideo) return;
+  hypeVideo.pause();
+  hypeModal.hidden=true;
+  document.body.style.overflow='';
+}
+
+checkHypeBtn?.addEventListener('click',openHypeModal);
+closeHypeBtn?.addEventListener('click',closeHypeModal);
+hypeMuteBtn?.addEventListener('click',()=>{
+  if(!hypeVideo) return;
+  hypeVideo.muted=!hypeVideo.muted;
+  updateHypeMuteIcon();
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape' && hypeModal && !hypeModal.hidden) closeHypeModal();
+});
+
+if(isMobileDevice() && webcamBtn){
+  const label=webcamBtn.lastChild;
+  if(label && label.nodeType===Node.TEXT_NODE){
+    label.textContent=' Take Photo with Camera';
+  }
+}
