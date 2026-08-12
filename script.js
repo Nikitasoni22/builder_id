@@ -41,33 +41,45 @@ function downloadBlob(blob, filename){
   setTimeout(()=>URL.revokeObjectURL(url), 1000);
 }
 
+function openExternalUrl(url){
+  const a=document.createElement('a');
+  a.href=url;
+  a.target='_blank';
+  a.rel='noopener noreferrer';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
 function openXComposer(text, desktopWin){
   const encoded=encodeURIComponent(text);
-  const webUrl=`https://twitter.com/intent/tweet?text=${encoded}`;
+  const webUrl=`https://x.com/intent/tweet?text=${encoded}`;
   const ua=navigator.userAgent;
   const isIOS=/iPhone|iPad|iPod/i.test(ua);
   const isAndroid=/Android/i.test(ua);
 
+  if(desktopWin && !desktopWin.closed){
+    desktopWin.location.href=webUrl;
+    return;
+  }
+
   if(isIOS){
+    let fallbackTimer;
+    const clearFallback=()=>{ if(fallbackTimer){ clearTimeout(fallbackTimer); fallbackTimer=null; } };
+    document.addEventListener('visibilitychange', clearFallback, {once:true});
     window.location.href=`twitter://post?message=${encoded}`;
-    setTimeout(()=>{ if(document.visibilityState==='visible') window.location.href=webUrl; }, 1200);
+    fallbackTimer=setTimeout(()=>{
+      if(document.visibilityState==='visible') openExternalUrl(webUrl);
+    }, 1200);
     return;
   }
 
   if(isAndroid){
-    window.location.href=`intent://twitter.com/intent/tweet?text=${encoded}#Intent;scheme=https;package=com.twitter.android;S.browser_fallback_url=${encodeURIComponent(webUrl)};end`;
+    window.location.href=`intent://x.com/intent/tweet?text=${encoded}#Intent;scheme=https;package=com.twitter.android;S.browser_fallback_url=${encodeURIComponent(webUrl)};end`;
     return;
   }
 
-  // Desktop: reuse the tab we opened synchronously on click (see shareBtn
-  // handler) so the browser doesn't treat this as a blocked popup once the
-  // async clipboard/image work finishes. Falls back to a fresh window.open
-  // if that tab isn't available for some reason.
-  if(desktopWin && !desktopWin.closed){
-    desktopWin.location.href=webUrl;
-  }else{
-    window.open(webUrl, '_blank', 'noopener,noreferrer');
-  }
+  window.open(webUrl, '_blank', 'noopener,noreferrer');
 }
 
 /* ================= image loading (HEIC/JPG/PNG safe) ================= */
@@ -715,17 +727,6 @@ function handleShareResult(result, blob, text, fileBase, desktopWin){
     return;
   }
 
-  if(isMobileDevice()){
-    // No native share sheet available (or it isn't supported for files) —
-    // save the builder ID and deep-link straight into the X/Twitter app
-    // with the caption already filled in, instead of asking for a 2nd tap.
-    downloadBlob(blob, `hhgoa2026-builder-id-${fileBase}.png`);
-    copyTextToClipboard(text);
-    openXComposer(text);
-    statusEl.textContent='Builder ID saved to your gallery — X is opening with your caption, attach the photo there.';
-    return;
-  }
-
   // Desktop fallback: reuse the tab opened synchronously on click so it
   // isn't blocked as a popup, while we finish copying the image.
   copyImageToClipboard(blob).then(copied=>{
@@ -739,19 +740,42 @@ function handleShareResult(result, blob, text, fileBase, desktopWin){
   });
 }
 
+function finishMobileShare(blob, text, fileBase){
+  cachedShareBlob=blob;
+  downloadBlob(blob, `hhgoa2026-builder-id-${fileBase}.png`);
+  copyTextToClipboard(text);
+  statusEl.textContent='X opened with your caption — attach the Builder ID from your downloads/gallery.';
+}
+
 document.getElementById('shareBtn').addEventListener('click',()=>{
   const name=document.getElementById('name').value||'a builder';
   const text=`Just picked up my HH Goa 2026 Builder ID 🌴🛂 ${name!=='a builder'?'— '+name:''} heading to Goa, 28–31 Oct. Make yours 👉 @247pmstudio #FrameInGoa #HackerHouseGoa #HHGoa2026`;
   const fileBase=(document.getElementById('name').value||'builder').toLowerCase().replace(/[^a-z0-9]+/g,'-')||'builder';
+
+  if(isMobileDevice()){
+    // Mobile browsers block redirects unless they happen inside the tap
+    // handler — open X immediately, then export/download the image.
+    openXComposer(text);
+    statusEl.textContent='Opening X with your caption…';
+
+    if(cachedShareBlob){
+      finishMobileShare(cachedShareBlob, text, fileBase);
+      return;
+    }
+
+    statusEl.textContent='Preparing image…';
+    exportCanvas(blob=>finishMobileShare(blob, text, fileBase));
+    return;
+  }
 
   // On desktop, open the destination tab RIGHT NOW, synchronously inside
   // this click handler. If we wait until after the async image export /
   // clipboard work finishes, browsers no longer consider it a trusted
   // user gesture and silently block the popup — that's why "Post on X"
   // wasn't opening anything on its own before.
-  const desktopWin = !isMobileDevice() ? window.open('', '_blank') : null;
+  const desktopWin=window.open('', '_blank');
 
-  const proceed = (blob) => {
+  const proceed=(blob)=>{
     cachedShareBlob=blob;
     shareBuilderIdToX(blob, text).then(result=>{
       handleShareResult(result, blob, text, fileBase, desktopWin);
