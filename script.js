@@ -18,6 +18,13 @@ const ctx=canvas.getContext('2d');
 const CW=1080, CH=1350;
 const PB={x:80,y:300,w:440,h:560};
 
+/* preload HH Goa logo (user-provided) */
+const HH_LOGO_URL='assets/hh-goa-logo.png';
+let hhLogo=null;
+const hhLogoImg=new Image();
+hhLogoImg.onload=()=>{ hhLogo=hhLogoImg; draw(); };
+hhLogoImg.src=HH_LOGO_URL;
+
 function isMobileDevice(){
   return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)
     || (navigator.maxTouchPoints > 1 && window.innerWidth <= 900);
@@ -164,19 +171,24 @@ function draw(){
   roundRect(ctx,50,50,CW-100,150,14); ctx.fill();
   drawGuilloche(ctx,60,60,CW-120,20,'#fee101',3);
 
-  /* crest */
-  ctx.save();
-  ctx.translate(120,125);
-  ctx.strokeStyle='#fee101'; ctx.lineWidth=2.5;
-  ctx.beginPath(); ctx.arc(0,0,42,0,Math.PI*2); ctx.stroke();
-  ctx.fillStyle='#fee101';
-  ctx.beginPath(); ctx.arc(0,-6,14,0,Math.PI*2); ctx.fill();
-  ctx.beginPath();
-  ctx.moveTo(-30,16); ctx.quadraticCurveTo(-15,4,0,16); ctx.quadraticCurveTo(15,28,30,16);
-  ctx.lineWidth=3; ctx.strokeStyle='#fee101'; ctx.stroke();
-  ctx.font="700 12px 'Imbue', serif"; ctx.fillStyle='#fee101'; ctx.textAlign='center';
-  ctx.fillText('HH',0,44);
-  ctx.restore();
+  /* HH Goa logo */
+  if(hhLogo){
+    const logoSize=110;
+    ctx.drawImage(hhLogo, 65, 125-logoSize/2, logoSize, logoSize);
+  }else{
+    ctx.save();
+    ctx.translate(120,125);
+    ctx.strokeStyle='#fee101'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.arc(0,0,42,0,Math.PI*2); ctx.stroke();
+    ctx.fillStyle='#fee101';
+    ctx.beginPath(); ctx.arc(0,-6,14,0,Math.PI*2); ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(-30,16); ctx.quadraticCurveTo(-15,4,0,16); ctx.quadraticCurveTo(15,28,30,16);
+    ctx.lineWidth=3; ctx.strokeStyle='#fee101'; ctx.stroke();
+    ctx.font="700 12px 'Imbue', serif"; ctx.fillStyle='#fee101'; ctx.textAlign='center';
+    ctx.fillText('HH',0,44);
+    ctx.restore();
+  }
 
   ctx.textAlign='left';
   ctx.fillStyle='#fee101';
@@ -190,9 +202,9 @@ function draw(){
   ctx.fillText('TYPE · B    CODE · HHG26    NO. '+state.passportNo,180,170);
   ctx.globalAlpha=1;
 
-  /* GOA badge top right */
+  /* GOA badge — aligned with header text row */
   ctx.save();
-  ctx.translate(CW-150,60);
+  ctx.translate(CW-185,88);
   ctx.fillStyle='#ff0080';
   roundRect(ctx,0,0,100,60,10); ctx.fill();
   ctx.strokeStyle='#fff'; ctx.lineWidth=3; roundRect(ctx,0,0,100,60,10); ctx.stroke();
@@ -318,8 +330,15 @@ function draw(){
   ctx.globalAlpha=1;
   ctx.strokeStyle='#064a28'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(hx,hy,hr,0,Math.PI*2); ctx.stroke();
   textOnArc(ctx,'★ OFFICIAL SEAL ★ HH GOA 2026 ★ ',hx,hy,58,-Math.PI/2,(Math.PI*2)/34,"700 8px 'Victor Mono', monospace",'#064a28');
-  ctx.fillStyle='#064a28'; ctx.font="900 20px 'Imbue', serif"; ctx.textAlign='center';
-  ctx.fillText('247', hx, hy+8);
+  ctx.fillStyle='rgba(6,74,40,.82)';
+  ctx.beginPath(); ctx.arc(hx,hy,30,0,Math.PI*2); ctx.fill();
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.font="900 24px 'Victor Mono', monospace";
+  ctx.lineWidth=4; ctx.strokeStyle='#064a28';
+  ctx.strokeText('2:47', hx, hy+1);
+  ctx.fillStyle='#fee101';
+  ctx.fillText('2:47', hx, hy+1);
+  ctx.textBaseline='alphabetic';
   ctx.restore();
 
   /* MRZ */
