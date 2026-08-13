@@ -771,7 +771,7 @@ function handleShareResult(result, blob, text, fileBase, desktopWin){
 
 document.getElementById('shareBtn').addEventListener('click',()=>{
   const name=document.getElementById('name').value||'a builder';
-  const text=`Just picked up my HH Goa 2026 Builder ID 🌴🛂 ${name!=='a builder'?'— '+name:''} heading to Goa, 28–31 Oct. Make yours 👉 @247pmstudio #FrameInGoa #HackerHouseGoa #HHGoa2026`;
+  const text=`Just picked up my HH Goa 2026 Builder ID 🌴🛂 ${name!=='a builder'?'— '+name:''} heading to Goa, 28–31 Oct. Make yours 👉 https://goa-hh-2026-task1.vercel.app/ @247pmstudio #FrameInGoa #HackerHouseGoa #HHGoa2026`;
   const fileBase=(document.getElementById('name').value||'builder').toLowerCase().replace(/[^a-z0-9]+/g,'-')||'builder';
 
   if(isMobileDevice()){
