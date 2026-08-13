@@ -51,35 +51,64 @@ function openExternalUrl(url){
   a.remove();
 }
 
-function openXComposer(text, desktopWin){
-  const encoded=encodeURIComponent(text);
-  const webUrl=`https://x.com/intent/tweet?text=${encoded}`;
-  const ua=navigator.userAgent;
-  const isIOS=/iPhone|iPad|iPod/i.test(ua);
-  const isAndroid=/Android/i.test(ua);
+function openXComposer(text) {
+    const encoded = encodeURIComponent(text);
+    const webUrl = `https://x.com/intent/post?text=${encoded}`;
 
-  if(desktopWin && !desktopWin.closed){
-    desktopWin.location.href=webUrl;
-    return;
-  }
+    const ua = navigator.userAgent;
+    const isIOS = /iPhone|iPad|iPod/i.test(ua);
+    const isAndroid = /Android/i.test(ua);
 
-  if(isIOS){
-    let fallbackTimer;
-    const clearFallback=()=>{ if(fallbackTimer){ clearTimeout(fallbackTimer); fallbackTimer=null; } };
-    document.addEventListener('visibilitychange', clearFallback, {once:true});
-    window.location.href=`twitter://post?message=${encoded}`;
-    fallbackTimer=setTimeout(()=>{
-      if(document.visibilityState==='visible') openExternalUrl(webUrl);
-    }, 1200);
-    return;
-  }
+    // iPhone / iPad
+    if (isIOS) {
+        let appOpened = false;
 
-  if(isAndroid){
-    window.location.href=`intent://x.com/intent/tweet?text=${encoded}#Intent;scheme=https;package=com.twitter.android;S.browser_fallback_url=${encodeURIComponent(webUrl)};end`;
-    return;
-  }
+        const onVisibilityChange = () => {
+            if (document.visibilityState === 'hidden') {
+                appOpened = true;
+            }
+        };
 
-  window.open(webUrl, '_blank', 'noopener,noreferrer');
+        document.addEventListener(
+            'visibilitychange',
+            onVisibilityChange,
+            { once: true }
+        );
+
+        // Try opening X app
+        window.location.href = `twitter://post?message=${encoded}`;
+
+        // If X app didn't open, fall back to X website
+        setTimeout(() => {
+            document.removeEventListener(
+                'visibilitychange',
+                onVisibilityChange
+            );
+
+            if (!appOpened && document.visibilityState === 'visible') {
+                window.location.href = webUrl;
+            }
+        }, 1500);
+
+        return;
+    }
+
+    // Android
+    if (isAndroid) {
+        const intentUrl =
+            `intent://x.com/intent/post?text=${encoded}` +
+            `#Intent;` +
+            `scheme=https;` +
+            `package=com.twitter.android;` +
+            `S.browser_fallback_url=${encodeURIComponent(webUrl)};` +
+            `end`;
+
+        window.location.href = intentUrl;
+        return;
+    }
+
+    // Desktop
+    window.open(webUrl, '_blank');
 }
 
 /* ================= image loading (HEIC/JPG/PNG safe) ================= */
@@ -740,31 +769,14 @@ function handleShareResult(result, blob, text, fileBase, desktopWin){
   });
 }
 
-function finishMobileShare(blob, text, fileBase){
-  cachedShareBlob=blob;
-  downloadBlob(blob, `hhgoa2026-builder-id-${fileBase}.png`);
-  copyTextToClipboard(text);
-  statusEl.textContent='X opened with your caption — attach the Builder ID from your downloads/gallery.';
-}
-
 document.getElementById('shareBtn').addEventListener('click',()=>{
   const name=document.getElementById('name').value||'a builder';
   const text=`Just picked up my HH Goa 2026 Builder ID 🌴🛂 ${name!=='a builder'?'— '+name:''} heading to Goa, 28–31 Oct. Make yours 👉 @247pmstudio #FrameInGoa #HackerHouseGoa #HHGoa2026`;
   const fileBase=(document.getElementById('name').value||'builder').toLowerCase().replace(/[^a-z0-9]+/g,'-')||'builder';
 
   if(isMobileDevice()){
-    // Mobile browsers block redirects unless they happen inside the tap
-    // handler — open X immediately, then export/download the image.
+    statusEl.textContent = 'Opening X...';
     openXComposer(text);
-    statusEl.textContent='Opening X with your caption…';
-
-    if(cachedShareBlob){
-      finishMobileShare(cachedShareBlob, text, fileBase);
-      return;
-    }
-
-    statusEl.textContent='Preparing image…';
-    exportCanvas(blob=>finishMobileShare(blob, text, fileBase));
     return;
   }
 
